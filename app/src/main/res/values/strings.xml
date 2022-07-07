@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Projekt</string>
+    <string name="form_email">email</string>
+    <string name="form_password">password</string>
+    <string name="login">Login</string>
+    <string name="startRegister">Nie posiadasz konta? Zarejestruj się!</string>
+    <string name="form_register">Register</string>
+    <string name="startLogin">Masz już konto? Zaloguj się!</string>
+    <string name="text">Text</string>
+    <string name="title">Title</string>
+    <string name="author">Author</string>
+    <string name="pages">Number of pages</string>
+</resources>

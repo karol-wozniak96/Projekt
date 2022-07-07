@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/title"
+        android:id="@+id/editTextTitle"
+        android:layout_marginTop="10dp"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/author"
+        android:layout_below="@+id/editTextTitle"
+        android:id="@+id/editTextAuthor"
+        android:layout_marginTop="10dp"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/pages"
+        android:layout_below="@+id/editTextAuthor"
+        android:id="@+id/editTextPages"
+        android:layout_marginTop="10dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ADD"
+        android:layout_below="@+id/editTextPages"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/add"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        />
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/add"
+        android:id="@+id/listView"/>
+
+</RelativeLayout>
