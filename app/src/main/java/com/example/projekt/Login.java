@@ -34,9 +34,7 @@ public class Login extends AppCompatActivity {
             String txt_password=password.getText().toString();
             loginUser(txt_email,txt_password);
         });
-        register.setOnClickListener(view -> {
-            startActivity(new Intent(Login.this, Register.class));
-        });
+        register.setOnClickListener(view -> startActivity(new Intent(Login.this, Register.class)));
 
     }
 

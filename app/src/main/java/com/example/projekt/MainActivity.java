@@ -2,136 +2,122 @@ package com.example.projekt;
 
 import static android.content.ContentValues.TAG;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     private Button add;
-    private EditText title, author, numberOfPages;
-    private ListView listView;
+
+    RecyclerView recyclerView;
+    ArrayList<Book> bookArrayList;
+    MyAdapter myAdapter;
+    FirebaseFirestore db;
+    ProgressDialog progressDialog;
+    EditText author,title, numberOfPages;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         add=findViewById(R.id.add);
+        author=findViewById(R.id.editTextAuthor);
         title=findViewById(R.id.editTextTitle);
-        author=findViewById(R.id.editTextTitle);
-        numberOfPages=findViewById(R.id.editTextTitle);
-        listView=findViewById(R.id.listView);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Map<String, Object> book = new HashMap<>();
-        final ArrayList<String> list =new ArrayList<>();
-        final ArrayAdapter adapter=new ArrayAdapter<String>(this,R.layout.list_item,list);
-        listView.setAdapter(adapter);
+        numberOfPages=findViewById(R.id.editTextPages);
 
-        db.collection("books")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
+        progressDialog=new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Fetching data...");
+        progressDialog.show();
 
-                                list.add(document.getData().toString());
-                            }
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
-                        }
-                    }
-                });
+        recyclerView=findViewById(R.id.recycleView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String txt_title=title.getText().toString();
-                String txt_author=title.getText().toString();
-                String txt_numberOfPages=title.getText().toString();
-                if(txt_title.isEmpty()||txt_author.isEmpty()||txt_numberOfPages.isEmpty()){
-                    Toast.makeText(MainActivity.this,"Please enter text!",Toast.LENGTH_SHORT).show();
+        db = FirebaseFirestore.getInstance();
+        bookArrayList= new ArrayList<>();
+        myAdapter=new MyAdapter(MainActivity.this, bookArrayList);
 
-                }
-                else{
-                    book.put("Title", txt_title);
-                    book.put("Author", txt_author);
-                    book.put("Number of pages", txt_numberOfPages);
-                    db.collection("books")
-                            .add(book)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+        recyclerView.setAdapter(myAdapter);
 
-                                }
-                            })
+        EvenChangeListener();
 
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.w(TAG, "Error adding document", e);
-                                }
-                            });
-                }
-                adapter.notifyDataSetChanged();
-                adapter.clear();
+        AddBook();
+
+
+    }
+
+    private void AddBook() {
+        add.setOnClickListener(view -> {
+            String txt_title=title.getText().toString();
+            String txt_author=author.getText().toString();
+            String txt_numberOfPages= numberOfPages.getText().toString();
+            Book book=new Book(txt_title,txt_author,txt_numberOfPages);
+            if(txt_title.isEmpty()||txt_author.isEmpty()){
+                Toast.makeText(MainActivity.this,"Please enter text!",Toast.LENGTH_SHORT).show();
+
+            }
+            else{
+
                 db.collection("books")
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        Log.d(TAG, document.getId() + " => " + document.getData());
+                        .add(book)
+                        .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
 
-                                        list.add(document.getString("Title"));
-
-                                    }
-                                    adapter.notifyDataSetChanged();
-                                } else {
-                                    Log.w(TAG, "Error getting documents.", task.getException());
-                                }
-                            }
-                        });
-
-
+                        .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
             }
 
         });
+    }
 
-
-
-
-
+    private void EvenChangeListener() {
+        System.out.println("1");
+        db.collection("books")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if(error!=null)
+                        {
+                            System.out.println("2");
+                            if(progressDialog.isShowing())
+                                System.out.println("3");
+                                progressDialog.dismiss();
+                            Log.e("Firestore error",error.getMessage());
+                            System.out.println("4");
+                            return;
+                        }
+                        for(DocumentChange documentChange:value.getDocumentChanges()){
+                            System.out.println("4");
+                            if(documentChange.getType()== DocumentChange.Type.ADDED){
+                                bookArrayList.add(documentChange.getDocument().toObject(Book.class));
+                                System.out.println("aray yes");
+                            }
+                            myAdapter.notifyDataSetChanged();
+                            System.out.println("5");
+                            if(progressDialog.isShowing())
+                                progressDialog.dismiss();
+                            System.out.println("aray not");
+                        }
+                    }
+                });
     }
 }

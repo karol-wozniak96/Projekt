@@ -30,17 +30,18 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ADD"
+        android:text="@string/add"
         android:layout_below="@+id/editTextPages"
         android:layout_alignParentEnd="true"
         android:id="@+id/add"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         />
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_below="@+id/add"
-        android:id="@+id/listView"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recycleView"/>
 
 </RelativeLayout>

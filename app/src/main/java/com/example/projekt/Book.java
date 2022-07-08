@@ -5,7 +5,14 @@ public class Book {
     private String author;
     private String numberOfPages;
 
-    public Book(String txt_title, String txt_author, String txt_numberOfPages) {
+    public Book(String title, String author, String numberOfPages) {
+        this.title = title;
+        this.author = author;
+        this.numberOfPages = numberOfPages;
+    }
+
+    public Book(){
+
     }
 
     public String getTitle() {
@@ -37,7 +44,7 @@ public class Book {
         return "Book{" +
                 "title='" + title + '\'' +
                 ", author='" + author + '\'' +
-                ", numberOfPages='" + numberOfPages + '\'' +
+                ", numberOfPages=" + numberOfPages +
                 '}';
     }
 }
