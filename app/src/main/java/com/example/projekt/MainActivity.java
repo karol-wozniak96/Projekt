@@ -3,6 +3,7 @@ package com.example.projekt;
 import static android.content.ContentValues.TAG;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -33,12 +34,21 @@ public class MainActivity extends AppCompatActivity {
     FirebaseFirestore db;
     ProgressDialog progressDialog;
     EditText author,title, numberOfPages;
+    MyAdapter.ItemClickListener itemClickListener;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        itemClickListener=((view, position) -> {
+
+            String title=bookArrayList.get(position).getTitle();
+            String author=bookArrayList.get(position).getAuthor();
+            String numberOfPages=bookArrayList.get(position).getNumberOfPages();
+            Log.e("Item",title);
+        });
 
         add=findViewById(R.id.add);
         author=findViewById(R.id.editTextAuthor);
@@ -56,13 +66,15 @@ public class MainActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         bookArrayList= new ArrayList<>();
-        myAdapter=new MyAdapter(MainActivity.this, bookArrayList);
+        myAdapter=new MyAdapter(MainActivity.this, bookArrayList, itemClickListener);
 
         recyclerView.setAdapter(myAdapter);
 
         EvenChangeListener();
 
         AddBook();
+
+
 
 
     }
@@ -90,32 +102,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void EvenChangeListener() {
-        System.out.println("1");
         db.collection("books")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         if(error!=null)
                         {
-                            System.out.println("2");
                             if(progressDialog.isShowing())
-                                System.out.println("3");
                                 progressDialog.dismiss();
                             Log.e("Firestore error",error.getMessage());
-                            System.out.println("4");
                             return;
                         }
                         for(DocumentChange documentChange:value.getDocumentChanges()){
-                            System.out.println("4");
                             if(documentChange.getType()== DocumentChange.Type.ADDED){
                                 bookArrayList.add(documentChange.getDocument().toObject(Book.class));
-                                System.out.println("aray yes");
                             }
                             myAdapter.notifyDataSetChanged();
-                            System.out.println("5");
                             if(progressDialog.isShowing())
                                 progressDialog.dismiss();
-                            System.out.println("aray not");
                         }
                     }
                 });
