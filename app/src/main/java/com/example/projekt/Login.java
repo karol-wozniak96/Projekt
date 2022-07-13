@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.projekt.main.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 //import com.google.firebase.auth.FirebaseAuth;

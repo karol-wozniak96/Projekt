@@ -11,4 +11,6 @@
     <string name="author">Author :</string>
     <string name="pages">Number of pages :</string>
     <string name="add">ADD</string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
 </resources>

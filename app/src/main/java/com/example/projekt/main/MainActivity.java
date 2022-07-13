@@ -1,38 +1,45 @@
-package com.example.projekt;
-
-import static android.content.ContentValues.TAG;
+package com.example.projekt.main;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.projekt.Book;
+import com.example.projekt.AddActivity;
+import com.example.projekt.EditorActivity;
+import com.example.projekt.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button add;
+    private static final int INTENT_EDIT = 200;
+    private static final int INTENT_ADD = 100;
 
     RecyclerView recyclerView;
     ArrayList<Book> bookArrayList;
-    MyAdapter myAdapter;
+    MainAdapter mainAdapter;
     FirebaseFirestore db;
     ProgressDialog progressDialog;
-    EditText author,title, numberOfPages;
+
+    MainAdapter.ItemClickListener itemClickListener;
+    FloatingActionButton fab;
+
+
 
 
     @Override
@@ -40,15 +47,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        add=findViewById(R.id.add);
-        author=findViewById(R.id.editTextAuthor);
-        title=findViewById(R.id.editTextTitle);
-        numberOfPages=findViewById(R.id.editTextPages);
+
+
+        clickListener();
 
         progressDialog=new ProgressDialog(this);
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Fetching data...");
-        progressDialog.show();
+        if(bookArrayList!=null)progressDialog.show();
 
         recyclerView=findViewById(R.id.recycleView);
         recyclerView.setHasFixedSize(true);
@@ -56,68 +62,73 @@ public class MainActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         bookArrayList= new ArrayList<>();
-        myAdapter=new MyAdapter(MainActivity.this, bookArrayList);
+        mainAdapter =new MainAdapter(MainActivity.this, bookArrayList, itemClickListener);
 
-        recyclerView.setAdapter(myAdapter);
+        recyclerView.setAdapter(mainAdapter);
 
         EvenChangeListener();
 
-        AddBook();
+
+
+        fab=findViewById(R.id.fabAdd);
+        fab.setOnClickListener(view -> startActivity(new Intent(this, AddActivity.class)));
+
+
 
 
     }
+    
 
-    private void AddBook() {
-        add.setOnClickListener(view -> {
-            String txt_title=title.getText().toString();
-            String txt_author=author.getText().toString();
-            String txt_numberOfPages= numberOfPages.getText().toString();
-            Book book=new Book(txt_title,txt_author,txt_numberOfPages);
-            if(txt_title.isEmpty()||txt_author.isEmpty()){
-                Toast.makeText(MainActivity.this,"Please enter text!",Toast.LENGTH_SHORT).show();
-
-            }
-            else{
-
-                db.collection("books")
-                        .add(book)
-                        .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
-
-                        .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
-            }
-
+    private void clickListener() {
+        itemClickListener=((view, position) -> {
+/*            Book book=bookArrayList.get(position);
+            Intent intent =new Intent(this,EditorActivity.class);
+            intent.putExtra("book", book);
+            Log.e("Book id",book.getId());
+            this.startActivity(intent);*/
         });
     }
 
+
+
     private void EvenChangeListener() {
-        System.out.println("1");
         db.collection("books")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         if(error!=null)
                         {
-                            System.out.println("2");
                             if(progressDialog.isShowing())
-                                System.out.println("3");
                                 progressDialog.dismiss();
                             Log.e("Firestore error",error.getMessage());
-                            System.out.println("4");
                             return;
                         }
                         for(DocumentChange documentChange:value.getDocumentChanges()){
-                            System.out.println("4");
-                            if(documentChange.getType()== DocumentChange.Type.ADDED){
-                                bookArrayList.add(documentChange.getDocument().toObject(Book.class));
-                                System.out.println("aray yes");
-                            }
-                            myAdapter.notifyDataSetChanged();
-                            System.out.println("5");
+                            mainAdapter.notifyDataSetChanged();
                             if(progressDialog.isShowing())
                                 progressDialog.dismiss();
-                            System.out.println("aray not");
+                        }
+
+                        if(!value.isEmpty()) {
+                            if (!value.isEmpty()) {
+
+                                List<DocumentSnapshot> list = value.getDocuments();
+
+                                bookArrayList.clear();
+
+                                for (DocumentSnapshot d : list) {
+                                    Book b = d.toObject(Book.class);
+                                    b.setId(d.getId());
+                                    bookArrayList.add(b);
+
+                                }
+                            }
                         }
                     }
                 });
+
+
     }
+
+
 }
