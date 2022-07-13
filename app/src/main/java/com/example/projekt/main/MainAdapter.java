@@ -1,6 +1,7 @@
-package com.example.projekt;
+package com.example.projekt.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +12,19 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.projekt.Book;
+import com.example.projekt.EditorActivity;
+import com.example.projekt.R;
+
 import java.util.ArrayList;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.RecyclerViewAdapter> {
+public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAdapter> {
 
     Context context;
     ArrayList<Book> bookArrayList;
     private final ItemClickListener itemClickListener;
 
-    public MyAdapter(Context context, ArrayList<Book> bookArrayList, ItemClickListener itemClickListener) {
+    public MainAdapter(Context context, ArrayList<Book> bookArrayList, ItemClickListener itemClickListener) {
         this.context = context;
         this.bookArrayList = bookArrayList;
         this.itemClickListener = itemClickListener;
@@ -49,7 +54,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.RecyclerViewAdapte
     }
 
 
-    public static class RecyclerViewAdapter extends RecyclerView.ViewHolder implements View.OnClickListener  {
+    public class RecyclerViewAdapter extends RecyclerView.ViewHolder implements View.OnClickListener  {
         TextView tv_title, tv_author, tv_pages;
         CardView card_item;
         ItemClickListener itemClickListener;
@@ -68,9 +73,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.RecyclerViewAdapte
 
         @Override
         public void onClick(View view) {
-            System.out.println("przed");
             itemClickListener.onItemClick(view, getAdapterPosition());
-            System.out.println("onClick");
+            Book book=bookArrayList.get(getAdapterPosition());
+            Log.d("Title",book.getTitle());
+            Intent intent=new Intent(context, EditorActivity.class);
+            intent.putExtra("book",book);
+            context.startActivity(intent);
+
+
+
         }
 
     }

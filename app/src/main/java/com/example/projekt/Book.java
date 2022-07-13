@@ -1,6 +1,13 @@
 package com.example.projekt;
 
-public class Book {
+import com.google.firebase.firestore.Exclude;
+
+import java.io.Serializable;
+
+public class Book implements Serializable {
+
+    @Exclude private String id;
+
     private String title;
     private String author;
     private String numberOfPages;
@@ -13,6 +20,14 @@ public class Book {
 
     public Book(){
 
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {
