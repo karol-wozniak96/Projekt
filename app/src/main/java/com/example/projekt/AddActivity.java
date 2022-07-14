@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AddActivity extends AppCompatActivity {
@@ -17,6 +19,7 @@ public class AddActivity extends AppCompatActivity {
     EditText author,title, numberOfPages;
     Button add;
     FirebaseFirestore db;
+    FirebaseUser user;
 
 
     @Override
@@ -28,6 +31,7 @@ public class AddActivity extends AppCompatActivity {
         author=findViewById(R.id.editTextAuthor);
         title=findViewById(R.id.editTextTitle);
         numberOfPages=findViewById(R.id.editTextPages);
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         add=findViewById(R.id.add);
         db = FirebaseFirestore.getInstance();
@@ -40,7 +44,8 @@ public class AddActivity extends AppCompatActivity {
             String txt_title=title.getText().toString();
             String txt_author=author.getText().toString();
             String txt_numberOfPages= numberOfPages.getText().toString();
-            Book book=new Book(txt_title,txt_author,txt_numberOfPages);
+            String by_user=user.getUid();
+            Book book=new Book(txt_title,txt_author,txt_numberOfPages,by_user);
             if(txt_title.isEmpty()||txt_author.isEmpty()){
                 Toast.makeText(this,"Please enter text!",Toast.LENGTH_SHORT).show();
 

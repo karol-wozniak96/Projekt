@@ -46,6 +46,7 @@ public class EditorActivity extends AppCompatActivity {
         delete=findViewById(R.id.delete);
         db = FirebaseFirestore.getInstance();
 
+
         UpdateBook();
         DeleteBook();
     }

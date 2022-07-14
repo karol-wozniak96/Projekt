@@ -15,6 +15,8 @@ import com.example.projekt.AddActivity;
 import com.example.projekt.EditorActivity;
 import com.example.projekt.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -34,10 +36,13 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Book> bookArrayList;
     MainAdapter mainAdapter;
     FirebaseFirestore db;
+    FirebaseUser user;
     ProgressDialog progressDialog;
 
     MainAdapter.ItemClickListener itemClickListener;
     FloatingActionButton fab;
+
+    String id,byUser;
 
 
 
@@ -61,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         db = FirebaseFirestore.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
         bookArrayList= new ArrayList<>();
         mainAdapter =new MainAdapter(MainActivity.this, bookArrayList, itemClickListener);
 
@@ -109,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                                 progressDialog.dismiss();
                         }
 
-                        if(!value.isEmpty()) {
+
                             if (!value.isEmpty()) {
 
                                 List<DocumentSnapshot> list = value.getDocuments();
@@ -119,11 +126,20 @@ public class MainActivity extends AppCompatActivity {
                                 for (DocumentSnapshot d : list) {
                                     Book b = d.toObject(Book.class);
                                     b.setId(d.getId());
-                                    bookArrayList.add(b);
 
+                                    id=user.getUid();
+                                    byUser=b.getByUser();
+
+                                    if(id.equals(byUser)){
+                                        bookArrayList.add(b);
+                                    }
+                                    else
+                                    {
+                                        System.out.println("nie");
+                                    }
                                 }
                             }
-                        }
+
                     }
                 });
 

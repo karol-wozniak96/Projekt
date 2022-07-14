@@ -7,10 +7,18 @@ import java.io.Serializable;
 public class Book implements Serializable {
 
     @Exclude private String id;
+    private String byUser;
 
     private String title;
     private String author;
     private String numberOfPages;
+
+    public Book(String title, String author, String numberOfPages, String byUser) {
+        this.title = title;
+        this.author = author;
+        this.numberOfPages = numberOfPages;
+        this.byUser=byUser;
+    }
 
     public Book(String title, String author, String numberOfPages) {
         this.title = title;
@@ -20,6 +28,14 @@ public class Book implements Serializable {
 
     public Book(){
 
+    }
+
+    public String getByUser() {
+        return byUser;
+    }
+
+    public void setByUser(String byUser) {
+        this.byUser = byUser;
     }
 
     public String getId() {
