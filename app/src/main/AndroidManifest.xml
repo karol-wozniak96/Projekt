@@ -12,11 +12,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Projekt">
+
         <activity
             android:name=".EditorActivity"
             android:exported="false"
             android:parentActivityName=".main.MainActivity"
             android:label="Edit book!"/>
+        <activity
+
         <activity
             android:name=".AddActivity"
             android:exported="false"
@@ -32,12 +35,21 @@
             </intent-filter>
             />
         </activity>
+
         <activity
             android:name=".Register"
-            android:exported="false" />
+            android:exported="true" />
+
         <activity
             android:name=".Login"
-            android:exported="true" />
+
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
