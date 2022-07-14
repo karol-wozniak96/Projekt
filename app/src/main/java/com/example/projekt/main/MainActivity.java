@@ -133,13 +133,8 @@ public class MainActivity extends AppCompatActivity {
                                     if(id.equals(byUser)){
                                         bookArrayList.add(b);
                                     }
-                                    else
-                                    {
-                                        System.out.println("nie");
-                                    }
                                 }
                             }
-
                     }
                 });
 
