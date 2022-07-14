@@ -88,11 +88,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void clickListener() {
         itemClickListener=((view, position) -> {
-/*            Book book=bookArrayList.get(position);
-            Intent intent =new Intent(this,EditorActivity.class);
-            intent.putExtra("book", book);
-            Log.e("Book id",book.getId());
-            this.startActivity(intent);*/
         });
     }
 
