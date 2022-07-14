@@ -17,7 +17,6 @@ import com.example.projekt.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -89,11 +88,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void clickListener() {
         itemClickListener=((view, position) -> {
-/*            Book book=bookArrayList.get(position);
-            Intent intent =new Intent(this,EditorActivity.class);
-            intent.putExtra("book", book);
-            Log.e("Book id",book.getId());
-            this.startActivity(intent);*/
         });
     }
 
@@ -128,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
                                     Book b = d.toObject(Book.class);
                                     b.setId(d.getId());
 
-
                                     id=user.getUid();
                                     byUser=b.getByUser();
 
@@ -141,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
                             }
-
 
                     }
                 });
