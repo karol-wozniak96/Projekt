@@ -4,3 +4,9 @@
 
 1.1   +recyclerView
       -listView
+
+1.2 click-lisener
+
+1.3 update/delete
+
+1.4 Dodanie podziału książek na użytkowników

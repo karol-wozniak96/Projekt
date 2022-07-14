@@ -7,7 +7,9 @@ import java.io.Serializable;
 public class Book implements Serializable {
 
     @Exclude private String id;
+
     private String byUser;
+
 
     private String title;
     private String author;
@@ -30,6 +32,7 @@ public class Book implements Serializable {
 
     }
 
+
     public String getByUser() {
         return byUser;
     }
@@ -37,6 +40,7 @@ public class Book implements Serializable {
     public void setByUser(String byUser) {
         this.byUser = byUser;
     }
+
 
     public String getId() {
         return id;
