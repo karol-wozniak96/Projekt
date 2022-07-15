@@ -10,3 +10,11 @@
 1.3 update/delete
 
 1.4 Dodanie podziału książek na użytkowników
+
+
+
+
+//Plany
+-dodanie kalendarza google
+-dodanie książki do danego dnia kiedy została skończona
+-dodanie oceny
