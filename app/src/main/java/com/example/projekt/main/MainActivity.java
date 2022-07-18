@@ -1,11 +1,14 @@
 package com.example.projekt.main;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.projekt.Book;
 import com.example.projekt.AddActivity;
 import com.example.projekt.EditorActivity;
+import com.example.projekt.Login;
 import com.example.projekt.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     MainAdapter.ItemClickListener itemClickListener;
     FloatingActionButton fab;
+
 
     String id,byUser;
 
@@ -77,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(mainAdapter);
 
         EvenChangeListener();
-
 
 
         fab=findViewById(R.id.fabAdd);
@@ -131,13 +135,8 @@ public class MainActivity extends AppCompatActivity {
                                     if(id.equals(byUser)){
                                         bookArrayList.add(b);
                                     }
-                                    else
-                                    {
-                                        System.out.println("nie");
-                                    }
                                 }
                             }
-
                     }
                 });
 
@@ -150,6 +149,27 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.itemLogout:
+                FirebaseAuth.getInstance().signOut();
+                Context context=this;
+                Intent intent=new Intent(context, Login.class);
+                context.startActivity(intent);
+                finish();
+
+
+
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
 
 
 }

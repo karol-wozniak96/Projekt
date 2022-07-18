@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class EditorActivity extends AppCompatActivity {
@@ -21,6 +23,7 @@ public class EditorActivity extends AppCompatActivity {
     EditText author,title, numberOfPages;
     Button update,delete;
     FirebaseFirestore db;
+    FirebaseUser user;
 
     private Book book;
 
@@ -45,6 +48,7 @@ public class EditorActivity extends AppCompatActivity {
         update=findViewById(R.id.update);
         delete=findViewById(R.id.delete);
         db = FirebaseFirestore.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
 
         UpdateBook();
@@ -73,13 +77,16 @@ public class EditorActivity extends AppCompatActivity {
             String txt_author=author.getText().toString();
             String txt_numberOfPages= numberOfPages.getText().toString();
 
+            String by_user=user.getUid();
+            System.out.println(by_user);
+
             if(txt_title.isEmpty()||txt_author.isEmpty()){
                 Toast.makeText(this,"Please enter text!",Toast.LENGTH_SHORT).show();
 
             }
             else{
 
-                Book b = new Book(txt_title,txt_author,txt_numberOfPages);
+                Book b = new Book(txt_title,txt_author,txt_numberOfPages,by_user);
 
                 db.collection("books").document(book.getId())
                         .set(b)
