@@ -41,7 +41,8 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
             android:hint="@string/form_password"
-            android:autofillHints="" />
+            android:autofillHints=""
+            android:inputType="textPassword"/>
 
         <Button
             android:id="@+id/loginButton"
