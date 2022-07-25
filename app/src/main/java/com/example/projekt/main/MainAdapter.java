@@ -75,7 +75,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAd
         public void onClick(View view) {
             itemClickListener.onItemClick(view, getAdapterPosition());
             Book book=bookArrayList.get(getAdapterPosition());
-            Log.d("Title",book.getTitle());
             Intent intent=new Intent(context, EditorActivity.class);
             intent.putExtra("book",book);
             context.startActivity(intent);

@@ -62,6 +62,13 @@
             android:layout_marginBottom="10dp"
             android:layout_marginStart="60dp"/>
 
+        <com.google.android.gms.common.SignInButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="130dp"
+            android:id="@+id/googleSignIn"/>
+
+
 
     </LinearLayout>
 
