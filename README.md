@@ -11,6 +11,7 @@
 
 1.4 Dodanie podziału książek na użytkowników
 
+1.5 Dodatnie logowanie za pomocą Google Account, wraz ze wszystkimi wcześniej utworzonymi opcjami.
 
 
 
