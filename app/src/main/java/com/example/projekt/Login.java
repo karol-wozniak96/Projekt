@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -62,8 +63,15 @@ public class Login extends AppCompatActivity implements GoogleApiClient.OnConnec
         login.setOnClickListener(view -> {
             String txt_email=email.getText().toString();
             String txt_password=password.getText().toString();
-            loginUser(txt_email,txt_password);
+            if (TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password)){
+                Toast.makeText(Login.this, "Empty credentials!", Toast.LENGTH_SHORT).show();
+            } else if (txt_password.length() < 6){
+                Toast.makeText(Login.this, "Password too short!", Toast.LENGTH_SHORT).show();
+            } else {
+                loginUser(txt_email,txt_password);
+            }
         });
+
         register.setOnClickListener(view -> startActivity(new Intent(Login.this, Register.class)));
 
         GoogleSignInOptions gso =  new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

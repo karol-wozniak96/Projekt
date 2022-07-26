@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 public class Register extends AppCompatActivity {
     private EditText email, password;
+    TextView toLogin;
 
     private FirebaseAuth mAuth;
 
@@ -25,6 +27,7 @@ public class Register extends AppCompatActivity {
         password=findViewById(R.id.password);
         Button register = findViewById(R.id.registerButton);
         mAuth = FirebaseAuth.getInstance();
+        toLogin=findViewById(R.id.textToLogin);
 
         register.setOnClickListener(v -> {
             String txtEmail = email.getText().toString();
@@ -37,6 +40,10 @@ public class Register extends AppCompatActivity {
             } else {
                 registerUser(txtEmail , txtPassword);
             }
+        });
+        toLogin.setOnClickListener(view -> {
+            startActivity(new Intent(Register.this, Login.class));
+            finish();
         });
     }
 

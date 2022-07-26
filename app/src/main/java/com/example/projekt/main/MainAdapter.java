@@ -53,6 +53,11 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.RecyclerViewAd
         return bookArrayList.size();
     }
 
+    public void filerList(ArrayList<Book> filteredList) {
+        bookArrayList=filteredList;
+        notifyDataSetChanged();
+    }
+
 
     public class RecyclerViewAdapter extends RecyclerView.ViewHolder implements View.OnClickListener  {
         TextView tv_title, tv_author, tv_pages;
