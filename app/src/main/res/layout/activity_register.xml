@@ -34,7 +34,7 @@
             android:hint="@string/form_register" />
 
         <TextView
-            android:id="@+id/textRegister"
+            android:id="@+id/textToLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/startLogin"

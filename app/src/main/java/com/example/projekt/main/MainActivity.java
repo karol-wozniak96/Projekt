@@ -4,11 +4,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -65,10 +69,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     MainAdapter.ItemClickListener itemClickListener;
     FloatingActionButton fab;
 
-
+    EditText editTextSearch;
 
     String id,byUser;
-
+    private ArrayList<Book> mExampleList;
 
 
 
@@ -88,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         if(bookArrayList!=null)progressDialog.show();
 
         recyclerView=findViewById(R.id.recycleView);
+        editTextSearch=findViewById(R.id.search);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -120,11 +125,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
 
     }
-    
+
 
     private void clickListener() {
         itemClickListener=((view, position) -> {
-            });
+        });
     }
 
 
@@ -148,44 +153,73 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                         }
 
 
-                            if (!value.isEmpty()) {
+                        if (!value.isEmpty()) {
 
-                                List<DocumentSnapshot> list = value.getDocuments();
+                            List<DocumentSnapshot> list = value.getDocuments();
 
-                                bookArrayList.clear();
+                            bookArrayList.clear();
 
-                                for (DocumentSnapshot d : list) {
-                                    Book b = d.toObject(Book.class);
-                                    b.setId(d.getId());
+                            for (DocumentSnapshot d : list) {
+                                Book b = d.toObject(Book.class);
+                                b.setId(d.getId());
 
 
-                                    try
-                                    {
-                                        id=user.getUid();
-                                        byUser=b.getByUser();
-                                        System.out.println("TUTAJ");
+                                try
+                                {
+                                    id=user.getUid();
+                                    byUser=b.getByUser();
 
-                                        if(id.equals(byUser)){
-                                            bookArrayList.add(b);
-                                        }
+                                    if(id.equals(byUser)){
+                                        bookArrayList.add(b);
                                     }
-                                    catch(NullPointerException e)
-                                    {
+                                }
+                                catch(NullPointerException e)
+                                {
+                                    byUser=b.getByUser();
 
-                                        System.out.println("TUTAJJJJJJJJJJ");
-                                        byUser=b.getByUser();
-
-                                        if(id.equals(byUser)){
-                                            bookArrayList.add(b);
-                                        }
+                                    if(id.equals(byUser)){
+                                        bookArrayList.add(b);
                                     }
                                 }
                             }
+                        }
                     }
                 });
 
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                System.out.println(editable);
+                filter(editable.toString());
+                getWindow().setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+                );
+
+            }
+        });
 
     }
+
+    private void filter(String text) {
+        ArrayList<Book> filteredList = new ArrayList<>();
+        for (Book b : bookArrayList) {
+            if(b.getTitle().toLowerCase().contains(text.toLowerCase())){
+                filteredList.add(b);
+            }
+        }
+        mainAdapter.filerList(filteredList);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater=getMenuInflater();

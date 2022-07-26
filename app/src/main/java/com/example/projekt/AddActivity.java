@@ -109,7 +109,7 @@ public class AddActivity extends AppCompatActivity implements GoogleApiClient.On
         add.setOnClickListener(view -> {
             String txt_title=title.getText().toString();
             String txt_author=author.getText().toString();
-            String txt_numberOfPages= numberOfPages.getText().toString();
+            String txt_numberOfPages=numberOfPages.getText().toString();
             String by_user;
 
 
